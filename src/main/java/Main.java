@@ -143,21 +143,19 @@ public class Main {
         // (an open common period must be between two required courses)
         for (int s = 0; s < S; s++) {
             for (int j = 2; j < J; j++) {
-
-                    MPConstraint constraint4 = solver.makeConstraint(0, infinity, String.format("Constraint4_s%s_j%s", s, j));
+                MPConstraint constraint4 = solver.makeConstraint(0, infinity, String.format("Constraint4_s%s_j%s", s, j));
                 for (int i = 0; i < I; i++) {
-                    constraint4.setCoefficient(x.get(i).get(j), d.get(i).get(s));
-                    constraint4.setCoefficient(x.get(i).get(j - 2), -d.get(i).get(s));
-                    constraint4.setCoefficient(x.get(i).get(j - 1), d.get(i).get(s));
+                    constraint4.setCoefficient(x.get(i).get(j), 0.5*d.get(i).get(s));
+                    constraint4.setCoefficient(y.get(s).get(j-1),-1);
+
+                    constraint4.setCoefficient(x.get(i).get(j - 2), 0.5*d.get(i).get(s));
                 }
-                constraint4.setCoefficient(y.get(s).get(j), -2);
             }
         }
 
-
-
         //constraint 4b
         //0, 6, 7, 12 ineligible for common pd
+
         for(int s = 0; s < S;s++)
         {
             MPConstraint constraint4b = solver.makeConstraint(0,0,"Constraint4b");
@@ -166,6 +164,8 @@ public class Main {
             constraint4b.setCoefficient(y.get(s).get(7),1);
             constraint4b.setCoefficient(y.get(s).get(12),1);
         }
+
+
 
         //constraint 4c
         //every cohort must have a minimum of 1 open pd
@@ -194,7 +194,6 @@ public class Main {
 
         // Constraint 6
         //(prereq chain courses must occur at different times)
-
         for (int i = 0; i < I; i++) {
             for (int i_prime = 0; i_prime < I; i_prime++) {
                 for (int j = 0; j < J; j++) {
@@ -204,8 +203,6 @@ public class Main {
                 }
             }
         }
-
-
 
         // Constraint 7
         //(coreq chain courses must occur at different times)
@@ -228,6 +225,7 @@ public class Main {
                 constraint.setCoefficient(y.get(s).get(j), 1);
             }
         }
+
 
         // Constraint 9: All classes must be offered
         //(all classes must be offered)
@@ -273,12 +271,25 @@ public class Main {
 
 
             System.out.println("Values of x:");
-            for (int i = 0; i < I; i++) {
-                for (int j = 0; j < J; j++) {
+            for (int j = 0; j < J; j++) {
+                System.out.print(pds.get(j));
+                //print classes to csv out
+                for (int i = 0; i < I; i++) {
                     if(x.get(i).get(j).solutionValue() > 0) {
-                        System.out.println("x[" + class_codes[i] + "][" + pds.get(j) + "] = " + x.get(i).get(j).solutionValue());
+                        //System.out.println("x[" + class_codes[i] + "][" + pds.get(j) + "] = " + x.get(i).get(j).solutionValue());
+                        System.out.print("," + class_codes[i]);
                     }
                 }
+
+                for (int s = 0; s < S; s++) {
+                    if(y.get(s).get(j).solutionValue() > 0) {
+                        System.out.print(","+ String.format("DegreePlan%sCommon",s+1));
+                    }
+                }
+
+
+
+                System.out.println();
             }
 
 
@@ -295,8 +306,5 @@ public class Main {
         } else {
             System.out.println("The problem does not have an optimal or feasible solution.");
         }
-
-
-
     }
 }
