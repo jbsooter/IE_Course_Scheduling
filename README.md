@@ -20,7 +20,13 @@ Key Shortcomings:
 
 #### **Parameters**
 
-$I$ = set of classes offered by dept, $J$ = set of class periods available for teaching,$S$ = set of semesters in 8 semester degree plan, $K$ = set of INEG faculty teaching in the semester
+$I$ = set of classes offered by dept
+
+$J$ = set of class periods available for teaching
+
+$S$ = set of semesters in 8 semester degree plan
+
+$K$ = set of INEG faculty teaching in the semester
 
 $C$ = single time period office hour capacity
 
