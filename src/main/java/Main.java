@@ -4,8 +4,7 @@ import com.google.ortools.linearsolver.MPObjective;
 import com.google.ortools.linearsolver.MPSolver;
 import com.google.ortools.linearsolver.MPVariable;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -37,6 +36,7 @@ public class Main {
         return a;
     }
     public static void main(String[] args) throws FileNotFoundException {
+        String modelRunName = "Results417_25pctunavailable";
         Scanner scnr = new Scanner(new File("data/a.csv"));
 
         ArrayList<ArrayList<Integer>> a = read2DBinary(scnr);
@@ -270,39 +270,51 @@ public class Main {
             }
 
 
-            System.out.println("Values of x:");
-            for (int j = 0; j < J; j++) {
-                System.out.print(pds.get(j));
-                //print classes to csv out
-                for (int i = 0; i < I; i++) {
-                    if(x.get(i).get(j).solutionValue() > 0) {
-                        //System.out.println("x[" + class_codes[i] + "][" + pds.get(j) + "] = " + x.get(i).get(j).solutionValue());
-                        System.out.print("," + class_codes[i]);
-                    }
-                }
+            //write to results md file
+            try {
+                BufferedWriter f_writer
+                        = new BufferedWriter(new FileWriter(
+                        String.format("results/%s.md",modelRunName)));
 
-                for (int s = 0; s < S; s++) {
-                    if(y.get(s).get(j).solutionValue() > 0) {
-                        System.out.print(","+ String.format("DegreePlan%sCommon",s+1));
-                    }
-                }
+                //md table format
+                f_writer.write("| Period | Courses |\n");
+                f_writer.write("|---------|-----------|\n");
 
-
-
-                System.out.println();
-            }
-
-
-            // Print out the values of y
-            System.out.println("Values of y:");
-            for (int s = 0; s < S; s++) {
                 for (int j = 0; j < J; j++) {
-                    if(y.get(s).get(j).solutionValue() > 0) {
+                    f_writer.write("| " + pds.get(j) + " | ");
+                    //print classes to csv out
+                    for (int i = 0; i < I; i++) {
+                        if(x.get(i).get(j).solutionValue() > 0) {
+                            //System.out.println("x[" + class_codes[i] + "][" + pds.get(j) + "] = " + x.get(i).get(j).solutionValue());
+                            f_writer.write(  class_codes[i] + ",");
+                        }
+                    }
 
-                        System.out.println("y[" + (s+1 )+ "][" + pds.get(j) + "] = " + y.get(s).get(j).solutionValue());
+
+                    for (int s = 0; s < S; s++) {
+                        if(y.get(s).get(j).solutionValue() > 0) {
+                            f_writer.write(","+ String.format("Semester%sCommon",s+1));
+                        }
+                    }
+                    f_writer.write("|\n");
+                }
+
+                f_writer.write("\n");
+                // Print out the values of y
+                f_writer.write("Values of y:\n\n");
+                for (int s = 0; s < S; s++) {
+                    for (int j = 0; j < J; j++) {
+                        if(y.get(s).get(j).solutionValue() > 0) {
+
+                            f_writer.write("y[" + (s+1 )+ "][" + pds.get(j) + "] = " + y.get(s).get(j).solutionValue() + "\n\n");
+                        }
                     }
                 }
+                f_writer.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+
         } else {
             System.out.println("The problem does not have an optimal or feasible solution.");
         }
