@@ -4,7 +4,7 @@
 
 **/data/** Tab delimeted matrices in text format from the Excel File
 
-**/results/** Results in xlsx format
+**/results/** Results in md format
 
 ## Status of model 04/14
 
