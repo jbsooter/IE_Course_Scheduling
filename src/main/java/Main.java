@@ -36,7 +36,7 @@ public class Main {
         return a;
     }
     public static void main(String[] args) throws FileNotFoundException {
-        String modelRunName = "Results417_25pctunavailable";
+        String modelRunName = "Results0501_40criselpctunavailable";
         Scanner scnr = new Scanner(new File("data/a.csv"));
 
         ArrayList<ArrayList<Integer>> a = read2DBinary(scnr);
@@ -56,7 +56,7 @@ public class Main {
         ArrayList<ArrayList<Integer>> p = read2DBinary(scnr);
 
         //read in w
-        scnr = new Scanner(new File("data/w.csv"));
+        scnr = new Scanner(new File("data/w_rand_90.csv"));
         ArrayList<ArrayList<Integer>> w = read2DBinary(scnr);
 
         //start optimization model
@@ -276,33 +276,41 @@ public class Main {
                         = new BufferedWriter(new FileWriter(
                         String.format("results/%s.md",modelRunName)));
 
-                //md table format
-                f_writer.write("| Period | Courses |\n");
-                f_writer.write("|---------|-----------|\n");
+                f_writer.write(String.format("# %s\n\n",modelRunName));
+                f_writer.write("**Definition of a Common Open Period:** Period where all students from degree plan semester *s* are available," +
+                        " in a period immediately between two required courses, at a time where all of their faculty are also available. \n\n");
 
-                for (int j = 0; j < J; j++) {
-                    f_writer.write("| " + pds.get(j) + " | ");
-                    //print classes to csv out
-                    for (int i = 0; i < I; i++) {
-                        if(x.get(i).get(j).solutionValue() > 0) {
-                            //System.out.println("x[" + class_codes[i] + "][" + pds.get(j) + "] = " + x.get(i).get(j).solutionValue());
-                            f_writer.write(  class_codes[i] + ",");
+                for(int s = 2; s < S-1;s++) { //2 to negate freshman yr and last semester
+
+                    f_writer.write(String.format("**Degree Plan Semester %s**\n\n",s+1));
+                    //md table format
+                    f_writer.write("| Period | Courses |\n");
+                    f_writer.write("|---------|-----------|\n");
+
+                    for (int j = 0; j < J; j++) {
+                        f_writer.write("| " + pds.get(j) + " | ");
+                        //print classes to csv out
+                        for (int i = 0; i < I; i++) {
+                            if ((x.get(i).get(j).solutionValue() > 0) &(d.get(i).get(s) > 0)) {
+                                //System.out.println("x[" + class_codes[i] + "][" + pds.get(j) + "] = " + x.get(i).get(j).solutionValue());
+                                f_writer.write(class_codes[i]);
+                            }
                         }
-                    }
 
 
-                    for (int s = 0; s < S; s++) {
-                        if(y.get(s).get(j).solutionValue() > 0) {
-                            f_writer.write(","+ String.format("Semester%sCommon",s+1));
-                        }
+                        //for (int s = 0; s < S; s++) {
+                            if (y.get(s).get(j).solutionValue() > 0) {
+                                f_writer.write( String.format("Semester%sCommon", s + 1));
+                            }
+                        //}
+                        f_writer.write("|\n");
                     }
-                    f_writer.write("|\n");
                 }
 
                 f_writer.write("\n");
                 // Print out the values of y
                 f_writer.write("Values of y:\n\n");
-                for (int s = 0; s < S; s++) {
+                for (int s = 2; s < S; s++) {
                     for (int j = 0; j < J; j++) {
                         if(y.get(s).get(j).solutionValue() > 0) {
 
