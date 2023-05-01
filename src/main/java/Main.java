@@ -95,7 +95,7 @@ public class Main {
             ArrayList<MPVariable> row = new ArrayList<>();
             for(int j = 0; j < J;j++)
             {
-                row.add(solver.makeBoolVar(String.format("X_%s%s",s,j)));
+                row.add(solver.makeBoolVar(String.format("Y_%s%s",s,j)));
             }
             y.add(row);
         }
@@ -122,9 +122,6 @@ public class Main {
                 }
             }
         }
-
-
-
 
 
         //constraint 3
@@ -164,7 +161,6 @@ public class Main {
             constraint4b.setCoefficient(y.get(s).get(7),1);
             constraint4b.setCoefficient(y.get(s).get(12),1);
         }
-
 
 
         //constraint 4c
@@ -217,7 +213,6 @@ public class Main {
         }
 
         // Constraint 8: Common open periods during a period j should not exceed office hours physical capacity
-        //TODO fix latex
         //(common open periods during a period j should not exceed office hours physical capacity)
         for (int j = 0; j < J; j++) {
             MPConstraint constraint = solver.makeConstraint(-infinity, C, String.format("Constraint8_j%s", j));
@@ -225,7 +220,6 @@ public class Main {
                 constraint.setCoefficient(y.get(s).get(j), 1);
             }
         }
-
 
         // Constraint 9: All classes must be offered
         //(all classes must be offered)
