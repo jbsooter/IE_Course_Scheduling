@@ -36,7 +36,7 @@ public class Main {
         return a;
     }
     public static void main(String[] args) throws FileNotFoundException {
-        String modelRunName = "Results0501_40criselpctunavailable";
+        String modelRunName = "Results0501_25pctunavailable";
         Scanner scnr = new Scanner(new File("data/a.csv"));
 
         ArrayList<ArrayList<Integer>> a = read2DBinary(scnr);
@@ -56,7 +56,7 @@ public class Main {
         ArrayList<ArrayList<Integer>> p = read2DBinary(scnr);
 
         //read in w
-        scnr = new Scanner(new File("data/w_rand_90.csv"));
+        scnr = new Scanner(new File("data/w_rand_25.csv"));
         ArrayList<ArrayList<Integer>> w = read2DBinary(scnr);
 
         //start optimization model
