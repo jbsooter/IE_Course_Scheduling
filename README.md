@@ -1,4 +1,8 @@
-## Repo Info
+## What is this for?
+
+This repository is an attempt to optimize the course schedule to better align faculty and student availability and standardize the scheduling process. 
+
+## Repo Organization
 
 **/IE_Scheduling_Parameters.xlsx** Excel file used to build parameter matrices
 
@@ -6,9 +10,19 @@
 
 **/results/** Results in md format
 
-## Status of model 04/14
+## How to run
 
-Model is feasible with all constraints listed below fully enforced. Faculty availability has been simulated with Uniform Random Distr. at 45% of considered teaching periods. 
+1. Update parameter files using **/IE_Scheduling_Parameters.xlsx**. 
+
+2. Copy and paste excel parameter sheets into the csv files in **/data/**. The code is setup to handle the tab delimited format. 
+
+3. Change the model run name in **Main.java**. Run **main.java**. Output will be available in **/results/**. 
+
+## Status of model 05/03
+
+Model is feasible under reasonable faculty availability with all constraints listed below fully enforced. Faculty availability has been simulated with Uniform Random Distribution at varying % of periods having faculty unavailable. 
+
+![](optimal_vs_unavailability.png)
 
 Key Shortcomings: 
 
